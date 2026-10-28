@@ -69,8 +69,8 @@ public class BotPanelScreen extends Screen {
 		send(BotActionPayload.OP_REQUEST_STATE, 0);
 	}
 
-	private static void send(byte op, byte arg) {
-		ClientPlayNetworking.send(new BotActionPayload(botX, botY, botZ, op, arg));
+	private static void send(int op, int arg) {
+		ClientPlayNetworking.send(new BotActionPayload(botX, botY, botZ, (byte) op, (byte) arg));
 	}
 
 	private static String shortName(String id) {
