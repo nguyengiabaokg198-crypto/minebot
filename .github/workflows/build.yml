@@ -50,13 +50,13 @@ jobs:
       - name: start server, run selftest, stop
         run: |
           set -o pipefail
-          { sleep 240; echo "miniedit debugtest"; sleep 45; echo "stop"; } | \
+          { sleep 240; echo "minebot debugtest"; sleep 45; echo "stop"; } | \
             ./gradlew runServer --console=plain > server-log.txt 2>&1 || true
           tail -40 server-log.txt
       - name: verify server started
         run: grep -E "Done \(" server-log.txt
       - name: verify selftest passed
-        run: grep "\[MiniEdit\] SelfTest PASSED" server-log.txt
+        run: grep "\[MineBot\] SelfTest PASSED" server-log.txt
       - name: upload server log
         if: always()
         uses: actions/upload-artifact@v7
@@ -85,8 +85,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create "$GITHUB_REF_NAME" \
-            --title "MiniEdit $GITHUB_REF_NAME" \
-            --notes "MiniEdit - selection axe + building panel GUI cho Minecraft 26.3 (Fabric).
+            --title "MineBot $GITHUB_REF_NAME" \
+            --notes "MineBot - may dao tu dong cho Minecraft 26.3 (Fabric).
           Cài: Fabric Loader 0.19.5+, Fabric API 0.165.0+26.3, file miniedit-*.jar vào thư mục mods.
           Đ Ồ TIỆN: dùng /miniedit kit để lấy item trong game." \
             build/libs/*.jar
