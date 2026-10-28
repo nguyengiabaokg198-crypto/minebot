@@ -1,0 +1,5 @@
+{
+	"variants": {
+		"": { "model": "minebot:block/bot" }
+	}
+}

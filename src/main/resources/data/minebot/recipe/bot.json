@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" P ",
+		"IAI",
+		"IRI"
+	],
+	"key": {
+		"P": { "item": "minecraft:iron_pickaxe" },
+		"A": { "item": "minecraft:iron_axe" },
+		"I": { "item": "minecraft:iron_ingot" },
+		"R": { "item": "minecraft:redstone" }
+	},
+	"result": { "id": "minebot:bot", "count": 1 }
+}

@@ -1,0 +1,28 @@
+{
+	"schemaVersion": 1,
+	"id": "minebot",
+	"version": "${version}",
+	"name": "MineBot",
+	"description": "MineBot: mining bot for Minecraft - a machine block that digs blocks in a chosen region, auto-swaps tools, and collects drops into its own pockets. Touch-friendly for phones.",
+	"authors": [
+		"hai"
+	],
+	"contact": {},
+	"license": "MIT",
+	"icon": "assets/minebot/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.minebot.MineBot"
+		],
+		"client": [
+			"com.minebot.client.MineBotClient"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
