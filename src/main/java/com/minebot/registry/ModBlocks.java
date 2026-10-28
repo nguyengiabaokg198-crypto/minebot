@@ -25,9 +25,13 @@ public final class ModBlocks {
 
 	public static BlockEntityType<BotBlockEntity> BOT_BE_TYPE;
 
-	private static <T extends Block> T registerBlock(String path, T block) {
-		ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK,
-			Identifier.fromNamespaceAndPath(MineBot.MOD_ID, path));
+	public static final Block BOT_BLOCK = registerBot();
+
+	private static Block registerBot() {
+		Identifier id = Identifier.fromNamespaceAndPath(MineBot.MOD_ID, "bot");
+		ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, id);
+		Block block = new BotBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
+			.strength(3.0f, 6.0f).setId(key));
 		Registry.register(BuiltInRegistries.BLOCK, key, block);
 		return block;
 	}
@@ -40,10 +44,6 @@ public final class ModBlocks {
 		Registry.register(BuiltInRegistries.ITEM, key, item);
 		return item;
 	}
-
-	public static final Block BOT_BLOCK = registerBlock("bot",
-		new BotBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
-			.strength(3.0f, 6.0f)));
 
 	public static final Item BOT_ITEM = registerItem("bot", BOT_BLOCK);
 
