@@ -30,8 +30,9 @@ public final class BotCommands {
 	private static int giveKit(CommandSourceStack source) throws CommandSyntaxException {
 		ServerPlayer player = source.getPlayerOrException();
 		player.getInventory().add(new ItemStack(ModBlocks.BOT_ITEM));
+		player.getInventory().add(new ItemStack(com.minebot.registry.ModItems.CONTROLLER));
 		source.sendSuccess(() -> Component.literal(
-			"[MineBot] Đã gửi Máy Đào Bot vào túi bạn (đặt xuống đất để dùng)"), false);
+			"[MineBot] Đã gửi: Máy Đào Bot + Bộ Điều Khiển (đặt máy, cầm Điều Khiển: tap trái block = Góc 1, tap phải = Góc 2, tap khoảng không = mở GUI)"), false);
 		MineBot.LOGGER.info("[MineBot] kit given to {}", player.getName().getString());
 		return 1;
 	}

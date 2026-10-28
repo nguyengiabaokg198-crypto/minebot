@@ -1,5 +1,6 @@
 {
 	"itemGroup.minebot.main": "MineBot",
 	"block.minebot.bot": "Máy Đào Bot",
-	"block.minebot.bot.tooltip": "Đào vùng đã chọn và giữ toàn bộ khoáng sản"
+	"block.minebot.bot.tooltip": "Đào vùng đã chọn và giữ toàn bộ khoáng sản",
+	"item.minebot.controller": "Bộ Điều Khiển Bot"
 }

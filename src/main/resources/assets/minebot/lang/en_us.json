@@ -1,5 +1,6 @@
 {
 	"itemGroup.minebot.main": "MineBot",
 	"block.minebot.bot": "MineBot Machine",
-	"block.minebot.bot.tooltip": "Mines a chosen region and keeps the loot"
+	"block.minebot.bot.tooltip": "Mines a chosen region and keeps the loot",
+	"item.minebot.controller": "Bot Controller"
 }

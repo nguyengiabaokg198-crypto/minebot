@@ -94,6 +94,34 @@ def bot_face(x, y):
 
     return base
 
+def controller_tex(x, y):
+    """16x16 item texture: small gamepad/remote, transparent outside the body."""
+    # transparent background
+    inside = 2 <= x <= 13 and 4 <= y <= 11
+    if not inside:
+        return (0, 0, 0, 0)
+    base = (56, 62, 76, 255)  # body
+    # rounded corners -> transparent
+    if (x in (2, 13) and y in (4, 11)) or (x in (3, 12) and y in (4, 11)):
+        return (0, 0, 0, 0)
+    # body border (1px)
+    if x in (2, 13) or y in (4, 11):
+        base = (148, 156, 174, 255)
+    # d-pad cross (left side)
+    if 4 <= x <= 7 and y in (7, 8):
+        base = (206, 212, 228, 255)
+    if x in (5, 6) and 6 <= y <= 9:
+        base = (206, 212, 228, 255)
+    # buttons (right side): green + gold
+    if (x, y) == (10, 6):
+        base = (96, 232, 120, 255)
+    if (x, y) == (11, 8):
+        base = (255, 200, 64, 255)
+    if (x, y) == (9, 8):
+        base = (96, 180, 255, 255)
+    return base
+
+
 def icon_scale():
     # nearest-neighbour 8x scale of the 16x16 face onto a dark plate
     img = [[bot_face(x // 8, y // 8) for x in range(128)] for y in range(128)]
@@ -105,6 +133,7 @@ def icon_scale():
 
 BASE = os.path.join(os.path.dirname(__file__), '..', 'src', 'main', 'resources', 'assets', 'minebot')
 png(os.path.join(BASE, 'textures', 'block', 'bot.png'), 16, 16, bot_face)
+png(os.path.join(BASE, 'textures', 'item', 'controller.png'), 16, 16, controller_tex)
 ICON = icon_scale()
 png(os.path.join(BASE, 'icon.png'), 128, 128, lambda x, y: ICON[y][x])
 print('textures written')

@@ -16,6 +16,7 @@ public record BotActionPayload(int bx, int by, int bz, byte op, byte arg) implem
 	public static final byte OP_TAKE_TOOLS = 4;
 	public static final byte OP_RUNNING = 5;
 	public static final byte OP_COLLECT_ALL = 6;
+	public static final byte OP_QUICK = 7;
 
 	public static final CustomPacketPayload.Type<BotActionPayload> TYPE =
 		new CustomPacketPayload.Type<>(

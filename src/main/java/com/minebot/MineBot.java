@@ -3,6 +3,7 @@ package com.minebot;
 import com.minebot.commands.BotCommands;
 import com.minebot.networking.BotNetworking;
 import com.minebot.registry.ModBlocks;
+import com.minebot.registry.ModItems;
 
 import net.fabricmc.api.ModInitializer;
 
@@ -15,6 +16,7 @@ public class MineBot implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		ModItems.init();
 		ModBlocks.init();
 		BotNetworking.init();
 		BotCommands.init();

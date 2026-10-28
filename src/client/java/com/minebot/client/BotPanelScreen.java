@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component;
 @Environment(EnvType.CLIENT)
 public class BotPanelScreen extends Screen {
 	private static final int PANEL_W = 250;
-	private static final int PANEL_H = 214;
+	private static final int PANEL_H = 226;
 
 	private static final String[] TOOL_NAMES = {"Cuốc", "Rìu", "Xẻng", "Liềm"};
 
@@ -24,7 +24,7 @@ public class BotPanelScreen extends Screen {
 	private static boolean valid, running, c1Set, c2Set;
 	private static int c1x, c1y, c1z, c2x, c2y, c2z;
 	private static String[] toolStr = {"-", "-", "-", "-"};
-	private static String invText = "Túi: rỗng";
+	private static String invText = "Túi máy: rỗng";
 	private static String statsText = "";
 
 	private int bx, by;
@@ -37,34 +37,36 @@ public class BotPanelScreen extends Screen {
 	protected void init() {
 		super.init();
 		bx = (this.width - PANEL_W) / 2;
-		by = Math.max(8, (this.height - PANEL_H) / 2);
+		by = Math.max(6, (this.height - PANEL_H) / 2);
 
-		// Corner row: two aiming buttons
-		this.addRenderableWidget(Button.builder(Component.literal("Nhắm Góc 1"),
-			b -> send(BotActionPayload.OP_CORNER1, 0)).bounds(bx + 6, by + 58, 116, 18).build());
-		this.addRenderableWidget(Button.builder(Component.literal("Nhắm Góc 2"),
-			b -> send(BotActionPayload.OP_CORNER2, 0)).bounds(bx + 128, by + 58, 116, 18).build());
+		// ---- QUICK region presets (one tap, no aiming) ----
+		this.addRenderableWidget(Button.builder(Component.literal("Quanh máy 9×9×9"),
+			b -> send(BotActionPayload.OP_QUICK, 0)).bounds(bx + 6, by + 50, 116, 18).build());
+		this.addRenderableWidget(Button.builder(Component.literal("Giếng sâu 5×5×16"),
+			b -> send(BotActionPayload.OP_QUICK, 1)).bounds(bx + 128, by + 50, 116, 18).build());
 
-		// Tool row: four slots
+		// ---- manual corners (aim BEFORE opening this GUI) ----
+		this.addRenderableWidget(Button.builder(Component.literal("Chốt Góc 1"),
+			b -> send(BotActionPayload.OP_CORNER1, 0)).bounds(bx + 6, by + 92, 116, 18).build());
+		this.addRenderableWidget(Button.builder(Component.literal("Chốt Góc 2"),
+			b -> send(BotActionPayload.OP_CORNER2, 0)).bounds(bx + 128, by + 92, 116, 18).build());
+
+		// ---- tool slots ----
 		for (int i = 0; i < 4; i++) {
 			final int slot = i;
 			this.addRenderableWidget(Button.builder(Component.literal(TOOL_NAMES[i]),
 				b -> send(BotActionPayload.OP_GIVE_TOOL, (byte) slot))
-				.bounds(bx + 6 + (i * 60), by + 80, 57, 18).build());
+				.bounds(bx + 6 + (i * 60), by + 134, 57, 18).build());
 		}
 
-		// Action row
-		this.addRenderableWidget(Button.builder(Component.literal("Chạy / Dừng"),
+		// ---- actions ----
+		this.addRenderableWidget(Button.builder(Component.literal("CHẠY / DỪNG"),
 			b -> send(BotActionPayload.OP_RUNNING, (byte) (running ? 0 : 1)))
-			.bounds(bx + 6, by + 130, 78, 20).build());
+			.bounds(bx + 6, by + 182, 78, 20).build());
 		this.addRenderableWidget(Button.builder(Component.literal("Nhận hết đồ"),
-			b -> send(BotActionPayload.OP_COLLECT_ALL, 0)).bounds(bx + 88, by + 130, 78, 20).build());
+			b -> send(BotActionPayload.OP_COLLECT_ALL, 0)).bounds(bx + 88, by + 182, 78, 20).build());
 		this.addRenderableWidget(Button.builder(Component.literal("Nhận công cụ"),
-			b -> send(BotActionPayload.OP_TAKE_TOOLS, 0)).bounds(bx + 170, by + 130, 78, 20).build());
-
-		// Refresh button
-		this.addRenderableWidget(Button.builder(Component.literal("Làm mới"),
-			b -> send(BotActionPayload.OP_REQUEST_STATE, 0)).bounds(bx + 6, by + 190, 70, 16).build());
+			b -> send(BotActionPayload.OP_TAKE_TOOLS, 0)).bounds(bx + 170, by + 182, 78, 20).build());
 
 		send(BotActionPayload.OP_REQUEST_STATE, 0);
 	}
@@ -90,7 +92,7 @@ public class BotPanelScreen extends Screen {
 	}
 
 	private static String cornerText(int x, int y, int z) {
-		return "(" + x + ", " + y + ", " + z + ")";
+		return "(" + x + "," + y + "," + z + ")";
 	}
 
 	public static void handleState(BotStatePayload p) {
@@ -130,7 +132,7 @@ public class BotPanelScreen extends Screen {
 		}
 		// inventory
 		if (!valid) {
-			invText = "Túi: rỗng";
+			invText = "Túi máy: rỗng";
 		} else {
 			int used = 0;
 			StringBuilder sb = new StringBuilder();
@@ -149,7 +151,7 @@ public class BotPanelScreen extends Screen {
 					}
 				}
 			}
-			invText = "Túi: " + used + "/15" + (sb.length() > 0 ? "   " + sb : "");
+			invText = "Túi máy: " + used + "/15" + (sb.length() > 0 ? "  " + sb : "");
 		}
 		// stats
 		StringBuilder sb2 = new StringBuilder();
@@ -171,30 +173,44 @@ public class BotPanelScreen extends Screen {
 		}
 	}
 
+	private String boxText() {
+		if (!c1Set || !c2Set) {
+			return "Hộp đào: CHƯA ĐỦ 2 GÓC — bấm 1 nút Vùng nhanh ở trên!";
+		}
+		int w = Math.abs(c1x - c2x) + 1;
+		int h = Math.abs(c1y - c2y) + 1;
+		int d = Math.abs(c1z - c2z) + 1;
+		long n = (long) w * h * d;
+		return "Hộp đào: " + w + "×" + h + "×" + d + " (" + n + " block)";
+	}
+
 	@Override
 	public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float delta) {
 		g.fill(bx, by, bx + PANEL_W, by + PANEL_H, 0xF0122430);
 		g.outline(bx, by, PANEL_W, PANEL_H, 0xFF37D06C);
 		super.extractRenderState(g, mouseX, mouseY, delta);
 
-		g.centeredText(this.font, "MINEBOT - MÁY ĐÀO", bx + PANEL_W / 2, by + 8, 0xFF37D06C);
+		g.centeredText(this.font, "MINEBOT - MÁY ĐÀO", bx + PANEL_W / 2, by + 7, 0xFF37D06C);
 		g.text(this.font, "Bot: " + cornerText(botX, botY, botZ)
-			+ (valid ? (running ? "   ● CHẠY" : "   ○ dừng") : "   ✖ máy mất"),
-			bx + 8, by + 22, 0xFF9FE7FF);
-		g.text(this.font,
-			"Góc 1: " + (c1Set ? cornerText(c1x, c1y, c1z) : "(nhắm block rồi bấm)")
-				+ "   Góc 2: " + (c2Set ? cornerText(c2x, c2y, c2z) : "chưa"),
-			bx + 8, by + 36, 0xFFECECEC);
-		g.text(this.font, "Ô công cụ (cầm tool rồi bấm để nạp vào):",
-			bx + 8, by + 70, 0xFF90A0B5);
-		g.text(this.font, "Cuốc: " + toolStr[0] + "   Rìu: " + toolStr[1],
-			bx + 8, by + 102, 0xFFECECEC);
-		g.text(this.font, "Xẻng: " + toolStr[2] + "   Liềm: " + toolStr[3],
-			bx + 8, by + 114, 0xFFECECEC);
-		g.text(this.font, invText, bx + 8, by + 157, 0xFF9FE7FF);
-		g.text(this.font, statsText, bx + 8, by + 168, 0xFF37D06C);
-		g.text(this.font, "Nhắm block → bấm Nhắm Góc 1 / 2 → bấm Chạy",
-			bx + 8, by + PANEL_H - 14, 0xFF90A0B5);
+			+ (valid ? (running ? "  ● ĐANG CHẠY" : "  ○ đang dừng") : "  ✖ máy mất"),
+			bx + 8, by + 19, 0xFF9FE7FF);
+		g.text(this.font, boxText(), bx + 8, by + 31, 0xFFECECEC);
+
+		g.text(this.font, "VÙNG NHANH (bấm 1 nút là xong):", bx + 8, by + 43, 0xFF90A0B5);
+
+		g.text(this.font, "2 GÓC TỰ CHỌN (cầm BỘ ĐIỀU KHIỂN: tap trái = Góc 1, tap phải = Góc 2):",
+			bx + 8, by + 85, 0xFF90A0B5);
+
+		g.text(this.font, "CÔNG CỤ (cầm tool rồi bấm nút để nạp cho bot):",
+			bx + 8, by + 127, 0xFF90A0B5);
+		g.text(this.font, "Cuốc: " + toolStr[0] + "  Rìu: " + toolStr[1]
+			+ "  Xẻng: " + toolStr[2] + "  Liềm: " + toolStr[3],
+			bx + 8, by + 156, 0xFFECECEC);
+
+		g.text(this.font, invText, bx + 8, by + 208 - 12, 0xFF9FE7FF);
+		g.text(this.font, statsText, bx + 8, by + 208 - 2, 0xFF37D06C);
+		g.text(this.font, "tap phải MÁY hoặc tap không khi cầm Điều Khiển = mở bảng này",
+			bx + 8, by + PANEL_H - 8, 0xFF7E8CA0);
 	}
 
 	@Override

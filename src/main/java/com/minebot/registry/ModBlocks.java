@@ -56,6 +56,7 @@ public final class ModBlocks {
 		.icon(() -> new ItemStack(BOT_ITEM))
 		.displayItems((parameters, output) -> {
 			output.accept(BOT_ITEM);
+			output.accept(ModItems.CONTROLLER);
 		})
 		.build();
 
