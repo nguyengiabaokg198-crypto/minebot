@@ -7,10 +7,12 @@
 		"IRI"
 	],
 	"key": {
-		"P": { "item": "minecraft:iron_pickaxe" },
-		"A": { "item": "minecraft:iron_axe" },
-		"I": { "item": "minecraft:iron_ingot" },
-		"R": { "item": "minecraft:redstone" }
+		"P": "minecraft:iron_pickaxe",
+		"A": "minecraft:iron_axe",
+		"I": "minecraft:iron_ingot",
+		"R": "minecraft:redstone"
 	},
-	"result": { "id": "minebot:bot", "count": 1 }
+	"result": {
+		"id": "minebot:bot"
+	}
 }
