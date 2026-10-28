@@ -5,13 +5,14 @@ import com.minebot.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BotBlock extends Block {
-	public BotBlock(Properties properties) {
+public class BotBlock extends Block implements EntityBlock {
+	public BotBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties properties) {
 		super(properties);
 	}
 
@@ -27,6 +28,4 @@ public class BotBlock extends Block {
 		}
 		return null;
 	}
-
-	public static class Properties extends net.minecraft.world.level.block.state.BlockBehaviour.Properties {}
 }

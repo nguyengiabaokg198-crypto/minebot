@@ -223,7 +223,7 @@ public class BotBlockEntity extends BlockEntity {
 		String id = BuiltInRegistries.BLOCK.getKey(st.getBlock()).toString();
 		stats.merge(id, 1, Integer::sum);
 		if (stats.size() > 30) {
-			stats.remove(stats.firstKey());
+			stats.remove(stats.keySet().iterator().next());
 		}
 		setChanged();
 		return true;
@@ -454,8 +454,8 @@ public class BotBlockEntity extends BlockEntity {
 	@Override
 	protected void saveAdditional(ValueOutput out) {
 		super.saveAdditional(out);
-		net.minecraft.world.ContainerHelper.saveAllItems(out.childOrEmpty("tools"), tools);
-		net.minecraft.world.ContainerHelper.saveAllItems(out.childOrEmpty("inv"), inventory);
+		net.minecraft.world.ContainerHelper.saveAllItems(out.child("tools"), tools);
+		net.minecraft.world.ContainerHelper.saveAllItems(out.child("inv"), inventory);
 		out.putBoolean("running", running);
 		out.putInt("c1x", c1x);
 		out.putInt("c1y", c1y);
